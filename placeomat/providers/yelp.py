@@ -38,7 +38,7 @@ class Provider(provider.Provider):
                 'reason': 'Got response code %d' % code
             }
         res = self.response.json()
-        items = res['businesses']
+        items = res.get('businesses', [])
         results = []
         for item in items:
             data = {

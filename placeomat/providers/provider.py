@@ -36,6 +36,7 @@ class Provider(object):
 
     def build_query_params(self, **kwargs):
         args_mapped = self.map_args(**kwargs)
+        print(args_mapped)
         return args_mapped
 
     def map_args(self, **kwargs):
@@ -44,9 +45,26 @@ class Provider(object):
 
         for k, v in kwargs.items():
             mapped_key = self.map.get(k, None)
+
             if mapped_key:
-                logging.debug('Mapping key "%s" to "%s"', k, mapped_key)
-                mapped_args[mapped_key] = v
+                # check if we have a one-to-many for keys
+                keys_to_map = mapped_key.split(',')
+
+                # only split values if we also successfully split keys
+                # e.g. we want to support single keys with multiple values
+                # like location = 'lat,long'
+                #
+                # but also lat,long = 'latval,longval' to turn into
+                # lat=latval, long=longval
+                if len(keys_to_map) > 1:
+                    values_to_map = v.split(',')
+                else:
+                    values_to_map = [v]
+
+                for i, key in enumerate(keys_to_map):
+                    logging.debug('Mapping key "%s" to "%s"', k, key)
+
+                    mapped_args[key] = values_to_map[i].strip()
             else:
                 default_args[k] = v
 
