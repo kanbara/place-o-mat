@@ -26,6 +26,11 @@ sudo pip3 install -r /vagrant/requirements.txt
 FINISH=$(date +"%m-%d-%Y-%T")
 
 echo "cd /vagrant" > ~/.bashrc
+echo "export GMAPS_KEY='<KEY_HERE>'" >> ~/.bashrc
+echo "export YELP_KEY='<KEY_HERE>'" >> ~/.bashrc
+
+TOP=$(cd $(dirname $0) && pwd)
+echo "export PYTHONPATH=${TOP}" >> ~/.bashrc
 
 # Finished!
 echo "-------------------------------"
